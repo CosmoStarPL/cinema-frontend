@@ -1,0 +1,5 @@
+.idea/
+node_modules/
+dist/
+cinema-frontend.iml
+npm-debug.log*
