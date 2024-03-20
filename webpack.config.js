@@ -1,36 +1,37 @@
 const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = {
-    mode: 'development',
-    entry: './src/index.js',
-    output: {
-        path: path.resolve(__dirname, 'dist'), // Output directory
-        filename: 'bundle.js', // Output filename
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
+module.exports = (env) => {
+    return {
+        mode: env.mode ?? "development",
+        entry: './src/app/index.js',
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            filename: '[name][contenthash].js',
+            clean: true
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: 'babel-loader',
+                    },
                 },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                }
+
+            ],
+        },
+        plugins: [new HtmlWebpackPlugin({template: "./public/index.html"})],
+        devServer: {
+            client: {
+                logging: 'none'
             },
-        ],
-    },
-    devServer: {
-        static: {
-            directory: path.join(__dirname, 'dist'),
         },
-        client: {
-            logging: 'none'
-        },
-        port: 8080,
-        watchFiles: {
-            options:{
-                aggregateTimeout: 5000,
-                poll: 1000,
-            }
-        },
-    },
+        watch: true
+    }
 };
